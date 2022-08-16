@@ -1,0 +1,111 @@
+LINUX CMD::Terminal::auto it->KSHITIJ PANDEY
+#KSHITJ#KSHITJ#KSHITJ#KSHITJ#KSHITJ#KSHITJ#KSHITJ
+#define WIN32_LEAN_AND_MEAN
+#define CREATE_THREAD_ACCESS (PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION)
+
+BOOL Inject(DWORD pID, const char * DLL_NAME);
+DWORD GetTargetThreadIDFromProcName(const char * ProcName);
+
+    <meta name="optimizely-datafile" content="{&quot;groups&quot;: [], &quot;environmentKey&quot;: &quot;production&quot;, &quot;rollouts&quot;: [], &quot;typedAudiences&quot;: [], &quot;projectId&quot;: &quot;16737760170&quot;, &quot;variables&quot;: [], &quot;featureFlags&quot;: [], &quot;experiments&quot;: [{&quot;status&quot;: &quot;Running&quot;, &quot;audienceIds&quot;: [], &quot;variations&quot;: [{&quot;variables&quot;: [], &quot;id&quot;: &quot;20667381018&quot;, &quot;key&quot;: &quot;control&quot;}, {&quot;variables&quot;: [], &quot;id&quot;: &quot;20680930759&quot;, &quot;key&quot;: &quot;treatment&quot;}], &quot;id&quot;: &quot;20652570897&quot;, &quot;key&quot;: &quot;project_genesis&quot;, &quot;layerId&quot;: &quot;20672300363&quot;, &quot;trafficAllocation&quot;: [{&quot;entityId&quot;: &quot;20667381018&quot;, &quot;endOfRange&quot;: 5000}, {&quot;entityId&quot;: &quot;20680930759&quot;, &quot;endOfRange&quot;: 10000}], &quot;forcedVariations&quot;:
+
+
+    <meta name="user-login" content="jskpa2001">
+
+  <link rel="sudo-modal" href="/sessions/sudo_modal">
+
+    <meta name="viewport" content="width=device-width">
+    
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="js-site-search-form" role="search" aria-label="Site" data-scope-type="Repository" data-scope-id="143238763" data-scoped-search-url="/OlivierLaflamme/Cheatsheet-God/search" data-owner-scoped-search-url="/users/OlivierLaflamme/search" data-unscoped-search-url="/search" data-turbo="false" action="/OlivierLaflamme/Cheatsheet-God/search" accept-charset="UTF-8" method="get">
+      <label class="form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+        <input type="text"
+          class="form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+          data-hotkey=s,/
+          name="q"
+          data-test-selector="nav-search-input"
+          placeholder="Search or jump to…"
+          data-unscoped-placeholder="Search or jump to…"
+          data-scoped-placeholder="Search or jump to…"
+          autocapitalize="off"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-autocomplete="list"
+          aria-controls="jump-to-results"
+          aria-label="Search or jump to…"
+          data-jump-to-suggestions-path="/_graphql/GetSuggestedNavigationDestinations"
+          spellcheck="false"
+          autocomplete="off"
+        >
+int main(int ar
+   DWORD pID = GetTargetThreadIDFromProcName("Engi
+   char buf[MAX_PATH] = {0};
+   GetFullPathName("HACKS.dll", MAX_PATH, buf, NULL);
+   printf(bu
+   if(!Inject(pID, buf))
+   {
+        printf("DLL Not Loaded!");
+    }else{
+        printf("DLL Loaded!");
+    }
+
+    _getch();
+   return 0;
+}
+
+BOOL Inject(DWORD pID, const char * DLL_NAME)
+{
+   HANDLE Proc;
+   HMODULE hLib;
+   char buf[50] = {0};
+   LPVOID RemoteString, LoadLibAddy;
+
+   if(!pID)
+      return false;
+
+   Proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pID);
+   if(!Proc)
+   {
+      sprintf(buf, "OpenProcess() failed: %d", GetLastError());
+      printf(buf);
+      return false;
+   }
+   
+   LoadLibAddy = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+   
+   
+   RemoteString = (LPVOID)VirtualAllocEx(Proc, NULL, strlen(DLL_NAME), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+
+   
+   WriteProcessMemory(Proc, (LPVOID)RemoteString, DLL_NAME, strlen(DLL_NAME), NULL);
+   CreateRemoteThread(Proc, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibAddy, (LPVOID)RemoteString, NULL, NULL);
+
+   CloseHandle(Proc);
+   return true;
+}
+
+DWORD GetTargetThreadIDFromProcName(const char * ProcName)
+{
+   PROCESSENTRY32 pe;
+   HANDLE thSnapShot;
+   BOOL retval, ProcFound = false;
+
+   thSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+   if(thSnapShot == INVALID_HANDLE_VALUE)
+   {
+      printf("Error: Unable to create toolhelp snapshot!");
+      return false;
+   }
+
+   pe.dwSize = sizeof(PROCESSENTRY32);
+   
+   retval = Process32First(thSnapShot, &pe);
+   while(retval)
+   {
+      if(StrStrI(pe.szExeFile, ProcName))
+      {
+         return pe.th32ProcessID;
+      }
+      retval = Process32Next(thSnapShot, &pe);
+   }
+   return 0;
+}
